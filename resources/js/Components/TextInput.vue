@@ -1,10 +1,15 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
-const model = defineModel({
-    type: String,
-    required: true,
+defineProps({
+    modelValue: {
+        type: String,
+        required: true,
+    },
+    placeholder: String
 });
+
+defineEmits(['update:modelValue']);
 
 const input = ref(null);
 
