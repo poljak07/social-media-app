@@ -1,5 +1,10 @@
 <script setup>
 import PostItem from "@/Components/app/PostItem.vue";
+
+defineProps({
+    posts: Array
+})
+
 const post1 = {
     user: {
         id: 1,
@@ -29,6 +34,7 @@ const post1 = {
     ],
     body: `
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aspernatur aut, consequatur cum cupiditate dicta dolores dolorum facere fugit harum labore minima necessitatibus nobis pariatur provident, quia sequi sint voluptatibus.</p>
+
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aspernatur aut, consequatur cum cupiditate dicta dolores dolorum facere fugit harum labore minima necessitatibus nobis pariatur provident, quia sequi sint voluptatibus.</p>
     `,
     created_at: '2023-11-19 15:12'
@@ -45,6 +51,7 @@ const post2 = {
     },
     body: `
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aspernatur aut, consequatur cum cupiditate dicta dolores dolorum facere fugit harum labore minima necessitatibus nobis pariatur provident, quia sequi sint voluptatibus.</p>
+
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aspernatur aut, consequatur cum cupiditate dicta dolores dolorum facere fugit harum labore minima necessitatibus nobis pariatur provident, quia sequi sint voluptatibus.</p>
     `,
     created_at: '2023-11-19 15:12'
@@ -53,10 +60,10 @@ const post2 = {
 
 <template>
     <div class="overflow-auto">
-        <PostItem :post="post1"/>
-        <PostItem :post="post2"/>
+        <PostItem v-for="post of posts" :key="post.id" :post="post"/>
     </div>
 </template>
 
 <style scoped>
+
 </style>
