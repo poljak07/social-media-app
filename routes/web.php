@@ -25,6 +25,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/post', [PostController::class, 'store'])
         ->name('post.create');
 
+    Route::put('/post/{post}', [\App\Http\Controllers\PostController::class, 'update'])
+        ->name('post.update');
+
     });
 
 //    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
