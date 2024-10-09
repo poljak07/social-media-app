@@ -35,6 +35,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/post/download/{attachment}', [PostController::class, 'downloadAttachment'])
     ->name('post.download');
 
+    Route::post('/post/{post}/reaction', [PostController::class, 'postReaction'])
+    ->name('post.reaction');
+
 //    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 
 
