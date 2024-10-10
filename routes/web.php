@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+
 Route::get('/', [HomeController::class, 'index'])
     ->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -14,13 +15,12 @@ Route::get('/', [HomeController::class, 'index'])
 Route::get('/u/{user:username}', [ProfileController::class, 'index'])
     ->name('profile');
 
-
 Route::middleware('auth')->group(function () {
     Route::post('/profile/update-images', [ProfileController::class, 'updateImage'])
         ->name('profile.updateImages');
+//    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
 
     Route::post('/post', [PostController::class, 'store'])
         ->name('post.create');
@@ -30,16 +30,15 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/post/{post}', [PostController::class, 'destroy'])
         ->name('post.destroy');
-    });
 
-        Route::get('/post/download/{attachment}', [PostController::class, 'downloadAttachment'])
-    ->name('post.download');
+    Route::get('/post/download/{attachment}', [PostController::class, 'downloadAttachment'])
+        ->name('post.download');
 
     Route::post('/post/{post}/reaction', [PostController::class, 'postReaction'])
-    ->name('post.reaction');
+        ->name('post.reaction');
 
-//    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-
-
+    Route::post('/post/{post}/comment', [PostController::class, 'createComment'])
+        ->name('post.comment.create');
+});
 
 require __DIR__.'/auth.php';
