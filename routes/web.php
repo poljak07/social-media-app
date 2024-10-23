@@ -8,7 +8,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-
 Route::get('/', [HomeController::class, 'index'])
     ->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -33,6 +32,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/group/join/{group:slug}', [GroupController::class, 'join'])
         ->name('group.join');
+
+    Route::post('/group/approve-request/{group:slug}', [GroupController::class, 'approveRequest'])
+        ->name('group.approveRequest');
 
 //    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

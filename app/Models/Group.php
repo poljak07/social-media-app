@@ -1,56 +1,59 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Models;
 
-use App\Models\Group;
-use App\Models\User;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
+use App\Http\Enums\GroupUserRole;
+use App\Http\Enums\GroupUserStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
-class RequestToJoinGroup extends Notification
+class Group extends Model
 {
-    use Queueable;
+    use HasFactory;
+    use SoftDeletes;
+    use HasSlug;
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct(public Group $group, public User $user)
+    protected $fillable = ['name', 'user_id', 'auto_approval', 'about', 'cover_path', 'thumbnail_path'];
+
+    public function getSlugOptions(): SlugOptions
     {
-        //
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug')
+            ->doNotGenerateSlugsOnUpdate();
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
-    public function via(object $notifiable): array
+    public function currentUserGroup(): HasOne
     {
-        return ['mail'];
+        return $this->hasOne(GroupUser::class)->where('user_id', Auth::id());
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
+    public function isAdmin($userId): bool
     {
-        return (new MailMessage)
-            ->line('User "'.$this->user->name.'" requested to join to group "'.$this->group->name.'"')
-            ->action('Approve Request', url(route('group.profile', $this->group)))
-            ->line('Thank you for using our application!');
+        return $this->currentUserGroup?->user_id == $userId;
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    public function adminUsers(): BelongsToMany
     {
-        return [
-            //
-        ];
+        return $this->belongsToMany(User::class, 'group_users')
+            ->wherePivot('role', GroupUserRole::ADMIN->value);
+    }
+
+    public function pendingUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'group_users')
+            ->wherePivot('status', GroupUserStatus::PENDING->value);
+    }
+
+    public function approvedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'group_users')
+            ->wherePivot('status', GroupUserStatus::APPROVED->value);
     }
 }
