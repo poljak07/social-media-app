@@ -23,7 +23,7 @@ Route::get('/group/approve-invitation/{token}', [GroupController::class, 'approv
 Route::middleware('auth')->group(function () {
     Route::post('/profile/update-images', [ProfileController::class, 'updateImage'])
         ->name('profile.updateImages');
-    
+
     // Groups
     Route::post('/group', [GroupController::class, 'store'])
         ->name('group.create');
