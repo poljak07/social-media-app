@@ -28,7 +28,7 @@ watch(() => page.props.posts, () => {
     if (page.props.posts) {
         allPosts.value = {
             data: page.props.posts.data,
-            next: page.props.posts.links.next
+            next: page.props.posts.links?.next
         }
     }
 }, {deep: true, immediate: true})
@@ -77,7 +77,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="overflow-auto">
+    <div className="overflow-auto">
         <PostItem v-for="post of allPosts.data" :key="post.id" :post="post"
                   @editClick="openEditModal"
                   @attachmentClick="openAttachmentPreviewModal"
