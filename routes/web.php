@@ -4,6 +4,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -11,6 +12,7 @@ use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])
     ->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::get('/u/{user:username}', [ProfileController::class, 'index'])
     ->name('profile');
@@ -81,6 +83,9 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/{post}/comment', [PostController::class, 'createComment'])
             ->name('post.comment.create');
+
+        Route::post('/ai-post', [PostController::class, 'aiPostContent'])
+            ->name('post.aiContent');
     });
 
     // Comments
@@ -92,6 +97,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/comment/{comment}/reaction', [PostController::class, 'commentReaction'])
         ->name('comment.reaction');
+
+    Route::get('/search/{search?}', [SearchController::class, 'search'])
+        ->name('search');
 
 });
 
