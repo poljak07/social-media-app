@@ -84,8 +84,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/{post}/comment', [PostController::class, 'createComment'])
             ->name('post.comment.create');
 
-        Route::post('/ai-post', [PostController::class, 'aiPostContent'])
-            ->name('post.aiContent');
+        Route::post('/{post}/pin', [PostController::class, 'pinUnpin'])
+            ->name('post.pinUnpin');
     });
 
     // Comments
